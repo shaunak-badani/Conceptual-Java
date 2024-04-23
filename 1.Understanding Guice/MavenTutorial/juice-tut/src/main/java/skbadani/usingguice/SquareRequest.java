@@ -11,9 +11,9 @@ public class SquareRequest {
     }
 
     @Inject
-    SquareRequest(DrawShape d)
+    public void setDrawShape(DrawShape d)
     {
-        System.out.println("Square Request constructor called");
+        System.out.println("Set draw shape called");
         this.d = d;
     }
 
