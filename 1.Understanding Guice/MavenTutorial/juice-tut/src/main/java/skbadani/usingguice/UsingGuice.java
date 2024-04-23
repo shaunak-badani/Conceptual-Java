@@ -22,8 +22,7 @@ public class UsingGuice
         if(squareReq.equals(SQUARE_REQ))
         {
             Injector injector = Guice.createInjector(new AppModule());
-            DrawShape d = injector.getInstance(DrawShape.class);
-            SquareRequest req = new SquareRequest(d);
+            SquareRequest req = injector.getInstance(SquareRequest.class);
             req.makeRequest();
         }
 
