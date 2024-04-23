@@ -8,5 +8,6 @@ public class AppModule extends AbstractModule {
     protected void configure()
     {
         bind(DrawShape.class).to(DrawSquare.class);
+        bind(SquareRequest.class).to(SquareRequestSubType.class);
     }
 }
