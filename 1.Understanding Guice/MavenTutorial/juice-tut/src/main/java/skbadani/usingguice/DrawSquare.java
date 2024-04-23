@@ -12,6 +12,7 @@ public class DrawSquare implements DrawShape
     public DrawSquare(@ColorValue String color, @EdgeValue Integer edge)
     {
         super();
+        System.out.println("DrawSquare constructor called");
         this.color = color;
         this.edge = edge;
     }

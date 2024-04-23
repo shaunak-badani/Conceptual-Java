@@ -98,3 +98,9 @@ bind(Integer.class).annotatedWith(EdgeValue.class).toInstance(40);
 
 It will create two separate instances of the objects you requested from Guice.
 What if you want to tell Guice: `can you create only one object`?
+
+
+### Introducing `Scopes`:
+
+When you bind the class to the impl with a scope of singleton, as shown in this change,
+the injector won't create the object a second time. It will just fetch the created object.
