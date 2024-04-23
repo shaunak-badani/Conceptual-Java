@@ -74,3 +74,22 @@ edge = 40
 However, this implies that Guice will inject these values IN ALL CONSTRUCTORS, not just in `DrawSquare`. So if some other class has a String value, that would also get bound to "Red".
 
 But we don't want that.
+
+### How do we solve the above problem?
+
+We annotate the parameters, as so:
+
+```
+@Inject
+public DrawSquare(@ColorValue String color, @EdgeValue Integer edge)
+{...}
+```
+
+`ColorValue` and `EdgeValue` are annotations, defined as shown with these set of changes.
+
+Now, we bind `ColorValue` in our module to a value of `Red`, and `EdgeValue` to 40 in our module:
+
+```
+bind(String.class).annotatedWith(ColorValue.class).toInstance("Red");
+bind(Integer.class).annotatedWith(EdgeValue.class).toInstance(40);
+```

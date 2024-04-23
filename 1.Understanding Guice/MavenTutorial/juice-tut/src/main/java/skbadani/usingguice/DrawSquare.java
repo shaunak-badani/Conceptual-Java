@@ -9,7 +9,7 @@ public class DrawSquare implements DrawShape
     private Integer edge;
 
     @Inject
-    public DrawSquare(String color, Integer edge)
+    public DrawSquare(@ColorValue String color, @EdgeValue Integer edge)
     {
         super();
         this.color = color;
