@@ -9,7 +9,7 @@ public class AppModule extends AbstractModule {
     protected void configure()
     {
         bind(DrawShape.class).to(DrawSquare.class).in(Scopes.SINGLETON);
-        bind(SquareRequest.class).to(SquareRequestSubType.class);
+        bind(SquareRequest.class).to(SquareRequestSubType.class).in(Scopes.SINGLETON);
 
         bind(String.class).annotatedWith(ColorValue.class).toInstance("Red");
         bind(Integer.class).annotatedWith(EdgeValue.class).toInstance(40);

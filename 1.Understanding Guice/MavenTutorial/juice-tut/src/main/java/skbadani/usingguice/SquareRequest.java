@@ -13,6 +13,7 @@ public class SquareRequest {
     @Inject
     SquareRequest(DrawShape d)
     {
+        System.out.println("Square Request constructor called");
         this.d = d;
     }
 
