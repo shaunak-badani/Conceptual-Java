@@ -93,3 +93,8 @@ Now, we bind `ColorValue` in our module to a value of `Red`, and `EdgeValue` to 
 bind(String.class).annotatedWith(ColorValue.class).toInstance("Red");
 bind(Integer.class).annotatedWith(EdgeValue.class).toInstance(40);
 ```
+
+### If you call `createInjector` twice:
+
+It will create two separate instances of the objects you requested from Guice.
+What if you want to tell Guice: `can you create only one object`?
