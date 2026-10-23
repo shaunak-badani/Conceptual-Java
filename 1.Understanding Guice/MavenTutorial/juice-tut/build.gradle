@@ -20,6 +20,11 @@ dependencies {
     testImplementation 'junit:junit:4.11'
 }
 
+test {
+    // Guice 4.2.2's cglib proxying needs this on JDK 17+ (module encapsulation of java.base).
+    jvmArgs = ['--add-opens', 'java.base/java.lang=ALL-UNNAMED']
+}
+
 application {
     mainClass = 'skbadani.usingguice.UsingGuice'
     // Guice 4.2.2's cglib proxying needs this on JDK 17+ (module encapsulation of java.base).
