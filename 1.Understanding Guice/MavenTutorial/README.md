@@ -144,3 +144,11 @@ Map<String, DrawShape> shapes;
 ```
 
 No `TypeLiteral` needed at the injection point — Guice resolves the generic type via reflection. (`TypeLiteral`/`Key.get(...)` is only needed when fetching it manually via `injector.getInstance(...)`.)
+
+### `TypeLiteral`:
+
+1. In `Map rawShapeMap = injector.getInstance(Key.get(new TypeLiteral<Map<String, DrawShape>>(){}));` — generics are erased at runtime, so a raw `Map.class` lookup can't distinguish `Map<String, DrawShape>` from any other `Map`. `TypeLiteral` captures the full generic signature (via an anonymous subclass Guice can inspect reflectively), and `Key.get(...)` turns that into a `Key` that `getInstance` accepts.
+
+2. In `MapBinder.newMapBinder(...)` — only needed when the key or value type is itself generic, e.g. `Map<String, List<DrawShape>>`. `List.class` alone can't express the `<DrawShape>` part, so you'd pass `new TypeLiteral<List<DrawShape>>(){}` instead of `List.class`. Not needed here, since both `String` and `DrawShape` are plain, non-generic types.
+
+All of these boil down to the same rule: reach for TypeLiteral whenever you need to name a parameterized type as a value (for a Key, a binding target, or a matcher), since a bare Class object can’t carry the type arguments.

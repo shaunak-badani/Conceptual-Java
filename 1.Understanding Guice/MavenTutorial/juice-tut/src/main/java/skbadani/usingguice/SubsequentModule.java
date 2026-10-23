@@ -5,7 +5,7 @@ import com.google.inject.multibindings.MapBinder;
 
 public class SubsequentModule extends AbstractModule {
 
-    public static final String SQUARE_KEY = "squarew";
+    public static final String SQUARE_KEY = "square";
 
     @Override
     protected void configure()
