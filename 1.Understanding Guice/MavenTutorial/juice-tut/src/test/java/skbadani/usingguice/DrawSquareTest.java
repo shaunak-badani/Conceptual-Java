@@ -1,8 +1,8 @@
-package skbadani.usingguice2;
+package skbadani.usingguice;
 
-import skbadani.usingguice.AuditGuard;
-import skbadani.usingguice.DrawSquare;
-import skbadani.usingguice.AppModule;
+// import skbadani.usingguice.AuditGuard;
+// import skbadani.usingguice.DrawSquare;
+// import skbadani.usingguice.AppModule;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.fail;
