@@ -160,3 +160,15 @@ Instead of injecting `T` directly, you inject a `Provider<T>` and call `.get()` 
 1. **Lazy construction** — defer building an expensive object until it's actually needed.
 2. **Multiple fresh instances** — call `.get()` more than once to get a new (unscoped) instance each time, instead of one `T` fixed at injection time.
 3. **Breaking circular dependencies** — `DrawSquare` → `SquareRequest` → `Map<String, DrawShape>` → `DrawSquare` is a cycle Guice can't proxy through (`SquareRequest` is a concrete class, not an interface). Injecting `Provider<SquareRequest>` into `DrawSquare` instead of `SquareRequest` breaks the construction-order cycle, since the `Provider` can exist before a `SquareRequest` does.
+
+### AOP (method interceptors):
+
+Guice can wrap method calls with an AOP Alliance `MethodInterceptor`, bound via `bindInterceptor(classMatcher, methodMatcher, interceptor)`. The interceptor's `invoke(MethodInvocation)` runs around the real call — before/after logic, or even skipping `invocation.proceed()` entirely — without touching the method body or its callers. It works by proxying the class, so it only applies to methods Guice itself constructs (non-final class, non-private/final method).
+
+Demo: `DrawSquare.draw()` is annotated `@Audited` (a marker annotation, `@Retention(RUNTIME)` + `@Target(METHOD)` so it's reflectively visible on just methods) and throws unless `AuditGuard`'s thread-local flag is `true`. Nothing sets that flag — until `AuditInterceptor` is bound in `AppModule`:
+
+```
+bindInterceptor(Matchers.any(), Matchers.annotatedWith(Audited.class), new AuditInterceptor());
+```
+
+`AuditInterceptor.invoke()` sets the flag, calls `proceed()`, resets it in a `finally`. `DrawSquare` and its callers never change — the behavior is composed in entirely from the module.
