@@ -126,3 +126,21 @@ What if you want to tell Guice: `can you create only one object`?
 
 When you bind the class to the impl with a scope of singleton, as shown in this change,
 the injector won't create the object a second time. It will just fetch the created object.
+
+### Binding multiple impls with `MapBinder`:
+
+`MapBinder` lets you bind several implementations of the same interface, keyed by a value (e.g. a `String`):
+
+```
+MapBinder<String, DrawShape> shapeBinder = MapBinder.newMapBinder(binder(), String.class, DrawShape.class);
+shapeBinder.addBinding("square").to(DrawSquare.class);
+```
+
+This binding isn't local to the module that creates it — once the module is installed, `Map<String, DrawShape>` becomes an injectable just like any other binding, so any class can get it with plain `@Inject`:
+
+```
+@Inject
+Map<String, DrawShape> shapes;
+```
+
+No `TypeLiteral` needed at the injection point — Guice resolves the generic type via reflection. (`TypeLiteral`/`Key.get(...)` is only needed when fetching it manually via `injector.getInstance(...)`.)
