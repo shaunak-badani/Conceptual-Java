@@ -1,0 +1,27 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Debug: UsingGuice",
+            "request": "launch",
+            "mainClass": "skbadani.usingguice.UsingGuice",
+            "projectName": "juice-tut",
+            "vmArgs": "--add-opens java.base/java.lang=ALL-UNNAMED"
+        },
+        {
+            "type": "java",
+            "name": "Debug: NoGuice",
+            "request": "launch",
+            "mainClass": "skbadani.noguice.NoGuice",
+            "projectName": "juice-tut"
+        },
+        {
+            "type": "java",
+            "name": "Debug: Current File",
+            "request": "launch",
+            "projectName": "juice-tut",
+            "vmArgs": "--add-opens java.base/java.lang=ALL-UNNAMED"
+        }
+    ]
+}
