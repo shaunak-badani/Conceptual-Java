@@ -152,3 +152,11 @@ No `TypeLiteral` needed at the injection point — Guice resolves the generic ty
 2. In `MapBinder.newMapBinder(...)` — only needed when the key or value type is itself generic, e.g. `Map<String, List<DrawShape>>`. `List.class` alone can't express the `<DrawShape>` part, so you'd pass `new TypeLiteral<List<DrawShape>>(){}` instead of `List.class`. Not needed here, since both `String` and `DrawShape` are plain, non-generic types.
 
 All of these boil down to the same rule: reach for TypeLiteral whenever you need to name a parameterized type as a value (for a Key, a binding target, or a matcher), since a bare Class object can’t carry the type arguments.
+
+### `Provider<T>`:
+
+Instead of injecting `T` directly, you inject a `Provider<T>` and call `.get()` yourself when you actually need an instance. Three benefits:
+
+1. **Lazy construction** — defer building an expensive object until it's actually needed.
+2. **Multiple fresh instances** — call `.get()` more than once to get a new (unscoped) instance each time, instead of one `T` fixed at injection time.
+3. **Breaking circular dependencies** — `DrawSquare` → `SquareRequest` → `Map<String, DrawShape>` → `DrawSquare` is a cycle Guice can't proxy through (`SquareRequest` is a concrete class, not an interface). Injecting `Provider<SquareRequest>` into `DrawSquare` instead of `SquareRequest` breaks the construction-order cycle, since the `Provider` can exist before a `SquareRequest` does.

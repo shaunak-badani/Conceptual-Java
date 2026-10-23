@@ -1,20 +1,28 @@
 package skbadani.usingguice;
 
+
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 public class DrawSquare implements DrawShape
 {
-    private final SquareRequest request;
+    private final Provider<SquareRequest> requestProvider;
 
     @Inject
-    public DrawSquare(SquareRequest request)
+    public DrawSquare(Provider<SquareRequest> requestProvider)
     {
-        this.request = request;
+        this.requestProvider = requestProvider;
+        // Can't call get method in the constructor
+        // 1. might as well inject the actual object
+        // 2. It beats the point of deferred loading -> provider object can be stored so that object
+        // getting can be deferred.
+        // requestProvider.get();
     }
 
     @Override
     public void draw()
     {
+        SquareRequest squareReq = requestProvider.get();
         System.out.println("Drawing square");
     }
 }
