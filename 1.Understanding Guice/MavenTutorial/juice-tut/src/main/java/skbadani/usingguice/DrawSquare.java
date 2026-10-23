@@ -19,9 +19,14 @@ public class DrawSquare implements DrawShape
         // requestProvider.get();
     }
 
+    @Audited
     @Override
     public void draw()
     {
+        if (!AuditGuard.isAudited())
+        {
+            throw new IllegalStateException("draw() called without being audited");
+        }
         SquareRequest squareReq = requestProvider.get();
         System.out.println("Drawing square");
     }
