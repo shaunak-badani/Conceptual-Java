@@ -1,0 +1,42 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+group = 'skbadani'
+version = '1.0'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'com.google.inject:guice:4.2.2'
+    testImplementation 'junit:junit:4.11'
+}
+
+application {
+    mainClass = 'skbadani.usingguice.UsingGuice'
+    // Guice 4.2.2's cglib proxying needs this on JDK 17+ (module encapsulation of java.base).
+    applicationDefaultJvmArgs = ['--add-opens', 'java.base/java.lang=ALL-UNNAMED']
+}
+
+tasks.register('runNoGuice', JavaExec) {
+    group = 'application'
+    description = 'Runs the noguice example (skbadani.noguice.NoGuice)'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'skbadani.noguice.NoGuice'
+}
+
+tasks.register('runUsingGuice', JavaExec) {
+    group = 'application'
+    description = 'Runs the Guice example (skbadani.usingguice.UsingGuice)'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'skbadani.usingguice.UsingGuice'
+    jvmArgs = ['--add-opens', 'java.base/java.lang=ALL-UNNAMED']
+}
