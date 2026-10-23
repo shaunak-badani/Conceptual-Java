@@ -1,5 +1,27 @@
 # Notes
 
+## Running the code
+
+The project lives in `juice-tut/` and builds with Gradle (via the included wrapper, so no local Gradle install is needed).
+
+Run the Guice example:
+
+```
+cd juice-tut && ./gradlew run
+```
+
+Run the plain (no-Guice) example:
+
+```
+cd juice-tut && ./gradlew runNoGuice
+```
+
+Run the tests:
+
+```
+cd juice-tut && ./gradlew test
+```
+
 ### Using Guice:
 
 
