@@ -1,9 +1,5 @@
 package skbadani.usingguice;
 
-// import skbadani.usingguice.AuditGuard;
-// import skbadani.usingguice.DrawSquare;
-// import skbadani.usingguice.AppModule;
-
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.fail;
 
@@ -11,6 +7,8 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 
 import org.junit.Test;
+
+import skbadani.audit.AuditGuard;
 
 public class DrawSquareTest {
 

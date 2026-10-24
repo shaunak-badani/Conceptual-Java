@@ -1,4 +1,4 @@
-package skbadani.usingguice;
+package skbadani.audit;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

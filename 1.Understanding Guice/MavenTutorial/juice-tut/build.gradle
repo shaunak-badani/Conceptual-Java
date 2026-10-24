@@ -16,6 +16,7 @@ repositories {
 }
 
 dependencies {
+    implementation project(':audit')
     implementation 'com.google.inject:guice:4.2.2'
     testImplementation 'junit:junit:4.11'
 }

@@ -1,4 +1,4 @@
-package skbadani.usingguice;
+package skbadani.audit;
 
 public class AuditGuard {
 

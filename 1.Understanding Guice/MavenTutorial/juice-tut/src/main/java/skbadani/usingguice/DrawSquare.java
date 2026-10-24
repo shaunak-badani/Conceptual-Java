@@ -4,6 +4,9 @@ package skbadani.usingguice;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
+import skbadani.audit.AuditGuard;
+import skbadani.audit.Audited;
+
 public class DrawSquare implements DrawShape
 {
     private final Provider<SquareRequest> requestProvider;
