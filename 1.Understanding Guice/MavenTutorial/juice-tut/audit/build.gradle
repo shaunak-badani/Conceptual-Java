@@ -21,5 +21,5 @@ dependencies {
 
     // implementation, not api: AuditInterceptor only logs internally now (no getLogger()
     // exposing org.slf4j.Logger anymore), so nothing outside `audit` ever needs to resolve it.
-    implementation 'org.slf4j:slf4j-api:1.7.36'
+    api 'org.slf4j:slf4j-api:1.7.36'
 }
