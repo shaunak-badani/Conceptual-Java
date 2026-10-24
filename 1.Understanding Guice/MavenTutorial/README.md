@@ -22,6 +22,28 @@ Run the tests:
 cd juice-tut && ./gradlew test
 ```
 
+## Project structure
+
+### Package vs Project vs Module
+
+| Construct | What it is | Declared via | Own build file / deps / output? | Example here |
+|---|---|---|---|---|
+| **Package** | Java language namespace (also governs package-private visibility) | `package x.y;` | No — no independent dependencies, no independent compiled output | `skbadani.audit`, `skbadani.usingguice` |
+| **Project** (Gradle) / **Module** (Maven) | Build-tool unit, one level up from a package | `build.gradle` + `settings.gradle`'s `include` (Gradle), or `pom.xml`'s `<modules>` (Maven) | Yes — own deps, own compiled jar | `audit/` — its own `build.gradle`, its own `implementation 'aopalliance:aopalliance:1.0'`, its own `build/libs/audit.jar` |
+| **Module** (JPMS, Java 9+) | A *third*, unrelated meaning — a JVM/language-level encapsulation boundary, not a build-tool concept | `module-info.java` (`requires`/`exports`) | N/A — different axis entirely | Not used in this project |
+
+One project/module typically contains many packages, and Gradle calls the whole root + subprojects together a single "build" (Maven calls it a "multi-module build" — same idea, different vocabulary). Smallest to largest: **package** (a namespace within one project) → **project/module** (own build file, own deps, own jar) → **build** (the whole multi-project build, run via one `./gradlew` invocation).
+
+### Folder names vs package names
+
+Folder names need not match package names — matching them is just a *convention*, not something the compiler enforces when compiling a whole source set at once (which is what Gradle/Maven do).
+
+Example: in the `audit` module, `Audited.java`, `AuditGuard.java`, and `AuditInterceptor.java` physically live under `src/main/java/sbadani/audit/`, but each still declares `package skbadani.audit;` — the folder was renamed from `skbadani` to `sbadani`, but the `package` statement inside the files was not touched. The compiler uses the `package` statement, not the folder, to decide where the `.class` files go, so they still end up at `build/classes/java/main/skbadani/audit/`, matching the *package name*, not the source folder.
+
+Because all three files declare the same package (`skbadani.audit`), none of them need to import each other. That's the real rule: whether an import is required depends only on whether two files declare the same package string — it has nothing to do with folder structure, and nothing to do with which Gradle project/module they're in. If the folder were renamed back to `skbadani` to match convention, the package declarations wouldn't change at all, so the files would *still* not need imports — fixing a folder-to-package mismatch is purely cosmetic and doesn't affect import requirements either way.
+
+Contrast with `AppModule.java` (package `skbadani.usingguice`), which *does* import `skbadani.audit.Audited` and `skbadani.audit.AuditInterceptor` — not because of any folder naming, but simply because it's declared in a genuinely different package.
+
 ### Using Guice:
 
 
