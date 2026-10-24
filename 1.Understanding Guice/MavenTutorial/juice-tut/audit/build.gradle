@@ -1,5 +1,5 @@
 plugins {
-    id 'java'
+    id 'java-library'
 }
 
 java {
@@ -12,5 +12,14 @@ repositories {
 }
 
 dependencies {
+    // NOTE: this is `implementation`, which should hide aopalliance from consumers of this
+    // module. It still compiles today only because com.google.inject:guice itself depends on
+    // aopalliance, and Maven POMs have no implementation/api distinction - every "compile"
+    // scope dependency leaks to consumers the way `api` would in Gradle. See slf4j-api below
+    // for the same implementation-vs-api question without that masking.
     implementation 'aopalliance:aopalliance:1.0'
+
+    // implementation, not api: AuditInterceptor only logs internally now (no getLogger()
+    // exposing org.slf4j.Logger anymore), so nothing outside `audit` ever needs to resolve it.
+    implementation 'org.slf4j:slf4j-api:1.7.36'
 }

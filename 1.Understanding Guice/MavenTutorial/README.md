@@ -44,6 +44,24 @@ Because all three files declare the same package (`skbadani.audit`), none of the
 
 Contrast with `AppModule.java` (package `skbadani.usingguice`), which *does* import `skbadani.audit.Audited` and `skbadani.audit.AuditInterceptor` — not because of any folder naming, but simply because it's declared in a genuinely different package.
 
+### `implementation` vs `api`
+
+Both make a dependency available to compile and run your own module. The difference is what happens to *consumers* of your module — projects that depend on yours:
+
+| | `implementation` | `api` |
+|---|---|---|
+| Visible to your own module's code | Yes | Yes |
+| Visible to a consumer's compile classpath | No | Yes |
+
+Use `api` for a dependency `depA` of project `projA` exactly when project `projB` (which depends on `projA`) needs `depA`'s types to be resolvable, as a direct consequence of using `projA`'s public surface — not because `projB` happens to need `depA` for some unrelated reason of its own. Concretely, that's when:
+
+- A public method of `projA` **returns** a type from `depA`, or takes one as a **parameter** — calling that method from `projB` requires the compiler to resolve the type.
+- A public class in `projA` **implements/extends** a type from `depA` — passing that class anywhere the `depA` type is expected (e.g. a varargs parameter) requires resolving the supertype.
+
+Gotcha: a leftover `import` statement in `projB` still forces that resolution, even on a line that's commented out or otherwise unused. Removing the code that needed the dependency isn't enough by itself — stale imports have to go too, or the build still demands `api`.
+
+In this project: `projA` = `audit`, `depA` = `slf4j-api`, `projB` = the root project (`src/`). While `AuditInterceptor` had a `getLogger()` method returning `org.slf4j.Logger`, `audit`'s `slf4j-api` dependency had to be `api` for `AppModule` (in `projB`) to compile against that return type. Once `getLogger()` was removed — and the leftover `import org.slf4j.Logger;` in `AppModule.java` was cleaned up too — `implementation` was sufficient again, since `AuditInterceptor` now only uses `Logger` internally, inside `audit` itself.
+
 ### Using Guice:
 
 
