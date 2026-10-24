@@ -62,6 +62,27 @@ Gotcha: a leftover `import` statement in `projB` still forces that resolution, e
 
 In this project: `projA` = `audit`, `depA` = `slf4j-api`, `projB` = the root project (`src/`). While `AuditInterceptor` had a `getLogger()` method returning `org.slf4j.Logger`, `audit`'s `slf4j-api` dependency had to be `api` for `AppModule` (in `projB`) to compile against that return type. Once `getLogger()` was removed — and the leftover `import org.slf4j.Logger;` in `AppModule.java` was cleaned up too — `implementation` was sufficient again, since `AuditInterceptor` now only uses `Logger` internally, inside `audit` itself.
 
+### `testImplementation`
+
+The same idea as `implementation`, but scoped to the **test** source set (`src/test/java`) instead of `src/main/java`. It makes a dependency available to compile and run tests, while keeping it completely out of the main code and out of anything that'd actually ship.
+
+In this project, `testImplementation 'junit:junit:4.11'` puts JUnit on the classpath for `AppTest.java` and `DrawSquareTest.java` only — `main`'s own `compileClasspath` never sees it at all:
+
+```
+$ ./gradlew :dependencies --configuration compileClasspath | grep -i junit
+(nothing)
+
+$ ./gradlew :dependencies --configuration testCompileClasspath | grep -i junit
+\--- junit:junit:4.11
+```
+
+A few related configurations exist for the same reason `implementation` has `api`/`compileOnly` siblings:
+
+- **`testCompileOnly`** / **`testRuntimeOnly`** — split compile-time-only from run-time-only test dependencies, same split as `compileOnly`/`runtimeOnly` for main code.
+- **`testApi`** — only exists under the `java-library` plugin; exposes test-only types to *other modules'* tests (used for shared test fixtures). Uncommon outside multi-module setups.
+
+Note this is orthogonal to the test source set automatically seeing `main`'s compiled output — that wiring exists regardless of `implementation`/`api`/`testImplementation`, which is why `DrawSquareTest.java` can reference `DrawSquare` and `AuditGuard` with no special dependency declaration for them. `testImplementation` only governs *extra*, test-only dependencies like JUnit itself.
+
 ### Using Guice:
 
 
